@@ -203,7 +203,7 @@ public class WalletTransactionServiceImpl extends CommonServiceImpl<WalletTransa
         if (ToolUtil.isNotEmpty(txtId)) {
             updateModel.setStatus(WalletOrderStatus.CONFIRMING.getCode());
             updateModel.setRemark("提币审核通过，审核人：" + loginUser.getUserName());
-            this.addWalletOrderTransaction(Constant.SYSTEM_USER_ID,order.getAddress(), WalletOrderType.fromCode(order.getOrderType()), WalletOrderStatus.CONFIRMING, txtId, OrderNoUtil.get(), order.getAmount());
+//            this.addWalletOrderTransaction(Constant.SYSTEM_USER_ID,order.getAddress(), WalletOrderType.fromCode(order.getOrderType()), WalletOrderStatus.CONFIRMING, txtId, OrderNoUtil.get(), order.getAmount());
         }
         updateModel.setId(orderId);
         updateModel.setRemark(WalletOrderStatus.CONFIRMING.getMsg());

@@ -10,6 +10,7 @@ import com.constant.UserStatusType;
 import com.model.*;
 import com.redis.Strings;
 import com.service.*;
+import com.utils.DateUtils.DateUtils;
 import com.utils.codeutils.Md5Util;
 import com.utils.numberutils.CurrencyUtil;
 import com.utils.toolutils.ToolUtil;
@@ -265,7 +266,14 @@ public class LoginController {
             if (remainTaskNo > 0) {
                 UserTask lastUserTask = userTaskService.readLastOne(user.getId());
                 if (lastUserTask!=null && lastUserTask.getStatus()!=null && lastUserTask.getStatus()==1){
-                    vo.setUserTask(lastUserTask);
+                    if (lastUserTask.getAssignTaskTime()!=null){
+                        String currentDate = DateUtils.currentDate();
+                        String assignTaskTime= DateUtils.formatDate(lastUserTask.getAssignTaskTime());
+                        if (!currentDate.equals(assignTaskTime)){
+                            vo.setUserTask(lastUserTask);
+                        }
+                    }
+
                 }
             }
         } catch (Exception e) {

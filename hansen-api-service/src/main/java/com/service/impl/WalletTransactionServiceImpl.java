@@ -5,6 +5,7 @@ import com.base.dao.CommonDao;
 import com.base.service.impl.CommonServiceImpl;
 import com.constant.CurrencyType;
 import com.constant.TransactionStatusType;
+import com.constant.WalletOrderStatus;
 import com.constant.WalletOrderType;
 import com.mapper.WalletTransactionMapper;
 import com.model.Parameter;
@@ -116,7 +117,8 @@ public class WalletTransactionServiceImpl extends CommonServiceImpl<WalletTransa
             transaction.setMessage("确认中");
             transaction.setTransactionLongTime(new Date().getTime());
             transaction.setTxtId(info.getTxId());
-            transaction.setStatus(TransactionStatusType.CHECKING.getCode());
+            transaction.setStatus(WalletOrderStatus.PENDING.getCode());
+            transaction.setTransactionStatus(TransactionStatusType.CHECKING.getCode());
 //            if (info.getCategory().equals("immature") || info.getCategory().equals("generate")) {
 //                transaction.setAddress("");
 //            } else {
