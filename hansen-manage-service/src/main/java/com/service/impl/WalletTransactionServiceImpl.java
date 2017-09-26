@@ -2,10 +2,7 @@ package com.service.impl;
 
 import com.base.dao.CommonDao;
 import com.base.service.impl.CommonServiceImpl;
-import com.constant.Constant;
-import com.constant.CurrencyType;
-import com.constant.WalletOrderStatus;
-import com.constant.WalletOrderType;
+import com.constant.*;
 import com.mapper.WalletTransactionMapper;
 import com.model.SysUser;
 import com.model.User;
@@ -175,6 +172,7 @@ public class WalletTransactionServiceImpl extends CommonServiceImpl<WalletTransa
         if (ToolUtil.isNotEmpty(order.getUserId())){
             return false;
         }
+        WalletTransaction updateModel = new WalletTransaction();
         User con = new User();
         con.setUid(Integer.valueOf(order.getUserId()));
         User user=userService.readOne(con);
@@ -194,19 +192,24 @@ public class WalletTransactionServiceImpl extends CommonServiceImpl<WalletTransa
                 userService.updateEquityAmtByUserId(user.getId(),-order.getAmount());
                 userDetailService.updateForzenEquityAmtByUserId(user.getId(),order.getAmount());
             }
+            updateModel.setStatus(WalletOrderStatus.DENIED.getCode());
+            updateModel.setRemark("提币审核不通过，审核人：" + loginUser.getUserName());
+            updateModel.setMessage(WalletOrderStatus.DENIED.getMsg());
 
         }
-        WalletTransaction updateModel = new WalletTransaction();
+
 
         BitcoinClient client = WalletUtil.getBitCoinClient(currencyType);
         String txtId = WalletUtil.sendToAddress(client, order.getAddress(), new BigDecimal(order.getAmount().toString()), "用户" + order.getUserId() + "提币", "用户" + order.getAddress() + "收币");
         if (ToolUtil.isNotEmpty(txtId)) {
-            updateModel.setStatus(WalletOrderStatus.CONFIRMING.getCode());
-            updateModel.setRemark("提币审核通过，审核人：" + loginUser.getUserName());
+            //            updateModel.setStatus(WalletOrderStatus.CONFIRMING.getCode());
+//            updateModel.setTransactionStatus(TransactionStatusType.CHECKING.getCode());
+//            updateModel.setMessage(WalletOrderStatus.CONFIRMING.getMsg());
+            updateModel.setTransactionStatus(TransactionStatusType.CHECKED.getCode());
+            updateModel.setMessage(WalletOrderStatus.SUCCESS.getMsg());
+            updateModel.setStatus(WalletOrderStatus.SUCCESS.getCode());
 //            this.addWalletOrderTransaction(Constant.SYSTEM_USER_ID,order.getAddress(), WalletOrderType.fromCode(order.getOrderType()), WalletOrderStatus.CONFIRMING, txtId, OrderNoUtil.get(), order.getAmount());
         }
-        updateModel.setId(orderId);
-        updateModel.setRemark(WalletOrderStatus.CONFIRMING.getMsg());
         this.updateById(order.getId(), updateModel);
         return true;
     }

@@ -163,7 +163,7 @@ public class WalletOrderServiceImpl extends CommonServiceImpl<WalletOrder> imple
 //        WalletOrder order = this.addWalletOrder(fromUserId, "", walletOrderType, -amt, -confirmAmount, poundage, WalletOrderStatus.PENDING);
         model.setAmount(amt);
         model.setStatus(WalletOrderStatus.PENDING.getCode());
-        model.setTransactionStatus(TransactionStatusType.UNCHECKED.getCode());
+        model.setTransactionStatus(TransactionStatusType.CHECKING.getCode());
         model.setMessage(WalletOrderStatus.PENDING.getMsg());
         model.setUserId(user.getUid().toString());
         model.setPrepayId(OrderNoUtil.get());
